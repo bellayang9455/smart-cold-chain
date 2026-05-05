@@ -2,7 +2,7 @@ import requests
 import random
 import time
 
-API_URL = "http://127.0.0.1:8000/sensor-data"
+API_URL = "https://smart-cold-api.onrender.com/sensor-data"
 
 fish_list = [
     {"fish_id": "F001", "species": "Tuna", "warehouse_id": "A01"},
