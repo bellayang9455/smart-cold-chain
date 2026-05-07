@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
-import FishListView from '../views/FishListView.vue'
-import FishDetailView from '../views/FishDetailView.vue'
+import BoxListView from '../views/BoxListView.vue'
+import BoxDetailView from '../views/BoxDetailView.vue'
 import AlertsView from '../views/AlertsView.vue'
 
 const router = createRouter({
@@ -13,14 +13,14 @@ const router = createRouter({
       component: DashboardView
     },
     {
-      path: '/fish',
-      name: 'fish-list',
-      component: FishListView
+      path: '/boxes',
+      name: 'box-list',
+      component: BoxListView
     },
     {
-      path: '/fish/:fishId',
-      name: 'fish-detail',
-      component: FishDetailView
+      path: '/boxes/:boxId',
+      name: 'box-detail',
+      component: BoxDetailView
     },
     {
       path: '/alerts',

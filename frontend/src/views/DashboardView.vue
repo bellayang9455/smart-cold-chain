@@ -1,32 +1,36 @@
 <template>
   <main class="page">
     <h1>智慧冷鏈儀表板</h1>
-      <p class="subtitle">即時追蹤魚貨溫度、濕度與異常告警狀態</p>
 
     <section class="cards">
       <div class="card">
-        <h3>監控中的魚貨</h3>
-        <p>{{ dashboard.total_fish }}</p>
+        <h3>魚貨箱總數</h3>
+        <p>{{ dashboard.total_boxes }}</p>
       </div>
 
       <div class="card">
-        <h3>冷鍊正常</h3>
+        <h3>正常數量</h3>
         <p>{{ dashboard.normal_count }}</p>
       </div>
 
-      <div class="card danger">
-        <h3>溫度異常</h3>
+      <div class="card danger-card">
+        <h3>異常數量</h3>
         <p>{{ dashboard.abnormal_count }}</p>
       </div>
 
       <div class="card">
-        <h3>平均保存溫度</h3>
+        <h3>平均溫度</h3>
         <p>{{ dashboard.average_temperature }} °C</p>
+      </div>
+
+      <div class="card">
+        <h3>總預估價值</h3>
+        <p>NT$ {{ dashboard.total_estimated_value }}</p>
       </div>
     </section>
 
     <section v-if="dashboard.abnormal_count > 0" class="alert-banner">
-      ⚠️ 目前有魚貨溫度異常，請立即檢查冷凍庫狀態
+      ⚠️ 目前有魚貨箱溫度異常，請立即檢查冷凍庫狀態
     </section>
 
     <section class="panel">
@@ -35,18 +39,21 @@
       <table>
         <thead>
           <tr>
-            <th>魚 ID</th>
+            <th>箱號</th>
             <th>等級</th>
             <th>訊息</th>
             <th>溫度</th>
+            <th>時間</th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="alert in dashboard.latest_alerts" :key="alert.id">
-            <td>{{ alert.fish_id }}</td>
+            <td>{{ alert.box_id }}</td>
             <td>{{ alert.level }}</td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.temperature }} °C</td>
+            <td>{{ formatTime(alert.timestamp) }}</td>
           </tr>
         </tbody>
       </table>
@@ -59,14 +66,20 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import api from '../api/api'
 
 const dashboard = ref({
-  total_fish: 0,
+  total_boxes: 0,
   normal_count: 0,
   abnormal_count: 0,
   average_temperature: null,
+  total_estimated_value: 0,
   latest_alerts: []
 })
 
 let timer = null
+
+function formatTime(time) {
+  if (!time) return '-'
+  return new Date(time).toLocaleString()
+}
 
 async function fetchDashboard() {
   const res = await api.get('/dashboard')
@@ -84,18 +97,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.subtitle {
-  color: #64748b;
-  margin-top: -8px;
-  margin-bottom: 24px;
-}
 .page {
   padding: 24px;
 }
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
 
@@ -106,11 +114,11 @@ onUnmounted(() => {
 }
 
 .card p {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: bold;
 }
 
-.danger {
+.danger-card {
   border-left: 6px solid #ef4444;
 }
 

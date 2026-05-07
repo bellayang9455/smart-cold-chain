@@ -1,14 +1,10 @@
 <template>
   <div>
-    <header class="topbar">
-      <h2>智慧冷鏈監控系統</h2>
-
-      <nav>
-        <RouterLink to="/">首頁</RouterLink>
-        <RouterLink to="/fish">魚貨列表</RouterLink>
-        <RouterLink to="/alerts">告警紀錄</RouterLink>
-      </nav>
-    </header>
+    <nav class="nav">
+      <RouterLink to="/">Dashboard</RouterLink>
+      <RouterLink to="/boxes">魚貨箱列表</RouterLink>
+      <RouterLink to="/alerts">告警紀錄</RouterLink>
+    </nav>
 
     <RouterView />
   </div>
@@ -21,31 +17,20 @@ body {
   background: #f4f6f8;
 }
 
-.topbar {
-  background: #0f172a;
-  color: white;
-  padding: 16px 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.topbar h2 {
-  margin: 0;
-}
-
-nav {
+.nav {
   display: flex;
   gap: 20px;
+  padding: 16px 24px;
+  background: #1f2937;
 }
 
-nav a {
+.nav a {
   color: white;
   text-decoration: none;
   font-weight: bold;
 }
 
-nav a.router-link-active {
+.nav a.router-link-active {
   color: #38bdf8;
 }
 </style>

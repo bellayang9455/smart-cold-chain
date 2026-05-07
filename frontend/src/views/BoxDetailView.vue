@@ -1,21 +1,21 @@
 <template>
-  <main class="page" v-if="detail.fish">
-    <h1>魚貨冷鏈履歷：{{ detail.fish.fish_id }}</h1>
+  <main class="page" v-if="detail.box">
+    <h1>魚貨箱詳細頁：{{ detail.box.box_id }}</h1>
 
-    <section
-      class="status-banner"
-      :class="detail.fish.status"
-    >
-      目前狀態：{{ statusText(detail.fish.status) }}
+    <section class="status-banner" :class="detail.box.status">
+      目前狀態：{{ statusText(detail.box.status) }}
     </section>
 
     <section class="card">
-      <p><strong>魚種：</strong>{{ detail.fish.species }}</p>
-      <p><strong>冷凍庫：</strong>{{ detail.fish.warehouse_id }}</p>
-      <p><strong>入庫時間：</strong>{{ formatTime(detail.fish.created_at) }}</p>
-      <p><strong>最新溫度：</strong>{{ detail.fish.latest_temperature }} °C</p>
-      <p><strong>最新濕度：</strong>{{ detail.fish.latest_humidity }} %</p>
-      <p><strong>累計超溫時間：</strong>{{ formatDuration(detail.fish.cumulative_over_temp_seconds) }}</p>
+      <p><strong>魚種：</strong>{{ detail.box.species }}</p>
+      <p><strong>重量：</strong>{{ detail.box.weight }} kg</p>
+      <p><strong>數量：</strong>{{ detail.box.quantity }}</p>
+      <p><strong>初始分級：</strong>{{ detail.box.initial_grade }}</p>
+      <p><strong>目前分級：</strong>{{ detail.box.current_grade }}</p>
+      <p><strong>冷凍庫：</strong>{{ detail.box.warehouse_id }}</p>
+      <p><strong>最新溫度：</strong>{{ detail.box.latest_temperature }} °C</p>
+      <p><strong>最新濕度：</strong>{{ detail.box.latest_humidity }} %</p>
+      <p><strong>預估價值：</strong>NT$ {{ detail.box.estimated_price }}</p>
     </section>
 
     <section class="card">
@@ -32,27 +32,19 @@
             <th>等級</th>
             <th>訊息</th>
             <th>溫度</th>
+            <th>時間</th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="alert in detail.alerts" :key="alert.id">
             <td>{{ alert.level }}</td>
             <td>{{ alert.message }}</td>
             <td>{{ alert.temperature }} °C</td>
+            <td>{{ formatTime(alert.timestamp) }}</td>
           </tr>
         </tbody>
       </table>
-    </section>
-    <section class="card">
-      <h2>魚貨追蹤 QR Code</h2>
-
-      <div class="qr-box">
-        <QrcodeVue :value="currentUrl" :size="180" />
-
-        <p class="qr-text">
-          掃描查看魚貨即時狀態
-        </p>
-      </div>
     </section>
   </main>
 </template>
@@ -62,28 +54,11 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../api/api'
 import TemperatureChart from '../components/TemperatureChart.vue'
-import QrcodeVue from 'qrcode.vue'
-
-const currentUrl = window.location.href
-
-function formatTime(time) {
-  if (!time) return '-'
-  return new Date(time).toLocaleString()
-}
-
-function formatDuration(seconds) {
-  if (!seconds) return '0 秒'
-
-  const min = Math.floor(seconds / 60)
-  const sec = seconds % 60
-
-  if (min > 0) return `${min} 分 ${sec} 秒`
-  return `${sec} 秒`
-}
 
 const route = useRoute()
+
 const detail = ref({
-  fish: null,
+  box: null,
   records: [],
   alerts: []
 })
@@ -96,8 +71,13 @@ function statusText(status) {
   return '正常'
 }
 
+function formatTime(time) {
+  if (!time) return '-'
+  return new Date(time).toLocaleString()
+}
+
 async function fetchDetail() {
-  const res = await api.get(`/fish/${route.params.fishId}`)
+  const res = await api.get(`/boxes/${route.params.boxId}`)
   detail.value = res.data
 }
 
