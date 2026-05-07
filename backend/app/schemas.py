@@ -3,20 +3,41 @@ from datetime import datetime
 
 
 class SensorDataCreate(BaseModel):
-    fish_id: str
+    box_id: str
+
     species: str
+
+    weight: float
+    quantity: int
+
+    initial_grade: str
+
     warehouse_id: str
+
     temperature: float
     humidity: float
 
 
-class FishResponse(BaseModel):
-    fish_id: str
+class BoxResponse(BaseModel):
+    box_id: str
+
     species: str
+
+    weight: float
+    quantity: int
+
+    initial_grade: str
+    current_grade: str
+
     warehouse_id: str
+
     status: str
+
     latest_temperature: float | None
     latest_humidity: float | None
+
+    estimated_price: float | None
+
     updated_at: datetime | None
 
     class Config:
