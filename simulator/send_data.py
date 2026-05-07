@@ -2,7 +2,7 @@ import requests
 import random
 import time
 
-API_URL = "http://127.0.0.1:8000/sensor-data"
+API_URL = "https://smart-cold-api.onrender.com/sensor-data"
 
 box_list = [
     {
@@ -86,12 +86,16 @@ while True:
 
     try:
 
+        print("送出資料：", payload)
+
         response = requests.post(
             API_URL,
             json=payload
         )
 
-        print(payload, response.json())
+        print("狀態碼：", response.status_code)
+
+        print("回應內容：", response.text)
 
     except Exception as e:
 
