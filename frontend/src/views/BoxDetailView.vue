@@ -90,11 +90,15 @@ async function generateQRCode() {
 }
 
 async function fetchDetail() {
-  const res = await api.get(`/boxes/${route.params.boxId}`)
-  detail.value = res.data
+  try {
+    const res = await api.get(`/boxes/${route.params.boxId}`)
+    detail.value = res.data
 
-  await nextTick()
-  await generateQRCode()
+    await nextTick()
+    generateQRCode()
+  } catch (error) {
+    console.error('魚貨箱詳細資料取得失敗：', error)
+  }
 }
 
 onMounted(() => {

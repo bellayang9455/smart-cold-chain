@@ -39,8 +39,12 @@ function formatTime(time) {
 }
 
 async function fetchAlerts() {
-  const res = await api.get('/alerts')
-  alerts.value = res.data
+  try {
+    const res = await api.get('/alerts')
+    alerts.value = res.data
+  } catch (error) {
+    console.error('告警資料取得失敗：', error)
+  }
 }
 
 onMounted(() => {

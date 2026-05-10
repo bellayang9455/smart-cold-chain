@@ -63,10 +63,13 @@ function statusText(status) {
 }
 
 async function fetchBoxes() {
-  const res = await api.get('/boxes')
-  boxList.value = res.data
+  try {
+    const res = await api.get('/boxes')
+    boxList.value = res.data
+  } catch (error) {
+    console.error('魚貨箱資料取得失敗：', error)
+  }
 }
-
 onMounted(() => {
   fetchBoxes()
   timer = setInterval(fetchBoxes, 3000)

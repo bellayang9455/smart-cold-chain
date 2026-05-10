@@ -82,8 +82,12 @@ function formatTime(time) {
 }
 
 async function fetchDashboard() {
-  const res = await api.get('/dashboard')
-  dashboard.value = res.data
+  try {
+    const res = await api.get('/dashboard')
+    dashboard.value = res.data
+  } catch (error) {
+    console.error('Dashboard 資料取得失敗：', error)
+  }
 }
 
 onMounted(() => {
