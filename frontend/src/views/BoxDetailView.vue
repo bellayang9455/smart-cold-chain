@@ -16,6 +16,11 @@
       <p><strong>最新溫度：</strong>{{ detail.box.latest_temperature }} °C</p>
       <p><strong>最新濕度：</strong>{{ detail.box.latest_humidity }} %</p>
       <p><strong>預估價值：</strong>NT$ {{ detail.box.estimated_price }}</p>
+      <div class="qr-section">
+        <h3>魚貨箱 QR Code</h3>
+        <img v-if="qrCodeUrl" :src="qrCodeUrl" alt="魚貨箱 QR Code" />
+        <p>掃描後可查看 {{ detail.box.box_id }} 的冷鏈履歷</p>
+      </div>
     </section>
 
     <section class="card">
@@ -50,7 +55,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import QRCode from 'qrcode'
+import { nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../api/api'
 import TemperatureChart from '../components/TemperatureChart.vue'
@@ -60,7 +67,8 @@ const route = useRoute()
 const detail = ref({
   box: null,
   records: [],
-  alerts: []
+  alerts: [],
+  const qrCodeUrl = ref('')
 })
 
 let timer = null
@@ -79,6 +87,14 @@ function formatTime(time) {
 async function fetchDetail() {
   const res = await api.get(`/boxes/${route.params.boxId}`)
   detail.value = res.data
+  await nextTick()
+  generateQRCode()
+}
+
+async function generateQRCode() {
+  const boxUrl = `${window.location.origin}/boxes/${route.params.boxId}`
+
+  qrCodeUrl.value = await QRCode.toDataURL(boxUrl)
 }
 
 onMounted(() => {
@@ -131,5 +147,22 @@ th,
 td {
   padding: 10px;
   border-bottom: 1px solid #ddd;
+}
+.qr-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.qr-section img {
+  width: 160px;
+  height: 160px;
+  background: white;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.qr-section p {
+  color: #555;
 }
 </style>
