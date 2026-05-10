@@ -85,7 +85,7 @@ function formatTime(time) {
 }
 
 async function generateQRCode() {
-  const boxUrl = `https://smart-cold-chain.vercel.app//boxes/${route.params.boxId}`
+  const boxUrl = `https:/smart-cold-chain.vercel.app/boxes/${route.params.boxId}`
   qrCodeUrl.value = await QRCode.toDataURL(boxUrl)
 }
 
