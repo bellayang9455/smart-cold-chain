@@ -20,7 +20,7 @@ function renderChart() {
   if (!chart) return
 
   const xData = props.records.map(item =>
-    new Date(item.timestamp).toLocaleTimeString()
+    new Date(item.timestamp).toLocaleString()
   )
 
   const yData = props.records.map(item => item.temperature)
@@ -31,7 +31,10 @@ function renderChart() {
     },
     xAxis: {
       type: 'category',
-      data: xData
+      data: xData,
+      axisLabel: {
+        rotate: 30
+      }
     },
     yAxis: {
       type: 'value',
